@@ -26,11 +26,8 @@ class Helper {
   /// Get Dio Header
   static Map<String, dynamic> getHeaders() {
     return {
-      'operation-system' : 'android'
+      'operation-system' : 'android',
+      'Content-Type' : 'application/json'
     }..removeWhere((key, value) => value == null);
   }
-
-  // static bool isDarkTheme() {
-  //   return sl<AppSharedPrefs>().getIsDarkTheme();
-  // }
 }
