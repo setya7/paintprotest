@@ -1,10 +1,7 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paintprotest/features/products/data/models/products_model.dart';
 import 'package:paintprotest/features/products/presentation/pages/products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../core/dependency_injection/injection_container.dart';
-import '../features/products/presentation/bloc/products_bloc.dart';
 import '../features/products/presentation/pages/add_update_product.dart';
 import 'app_routes.dart';
 
@@ -23,7 +20,7 @@ final router = GoRouter(
         path: Routes.addAndUpdateProduct,
         builder: (context, state) {
           final product = state.extra as ProductsModel?;
-          return BlocProvider(create: (context) => sl<ProductsBloc>(), child: AddAndUpdateProduct(productsModel: product));
+          return AddAndUpdateProduct(productsModel: product);
         }),
   ],
 );

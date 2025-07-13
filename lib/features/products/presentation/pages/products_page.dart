@@ -21,63 +21,62 @@ class _ProductsPageState extends State<ProductsPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => sl<ProductsBloc>()..add(GetProducts()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Products'),
-        ),
-        body: Column(
-          children: [
-            const Center(
-              child: Text('Welcome to products page!'),
+      child: Builder(
+        builder: (innerContext) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Products'),
             ),
-            Expanded(
-              child: BlocConsumer<ProductsBloc, ProductsState>(
-                listener: (context, state) {
-                  if (state is ProductsFailed) {
-                    print("ini state ProductsFailed ${state.failedText}");
-                  }
-                },
-                builder: (context, state) {
-                  final List<ProductsModel> products = context.read<ProductsBloc>().products;
-                  if (state is ProductsLoaded) {
-                    return ListView.builder(
+            body: BlocConsumer<ProductsBloc, ProductsState>(
+              listener: (context, state) {
+                if (state is ProductsFailed) {
+                  print("ini state ProductsFailed ${state.failedText}");
+                }
+              },
+              builder: (context, state) {
+                final List<ProductsModel> products = context.read<ProductsBloc>().products;
+                if (state is ProductsLoaded) {
+                  return ListView.builder(
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                            onTap: () {
+                              context.push(Routes.addAndUpdateProduct, extra: products[index]);
+                            },
+                            child: ListTile(title: Text(products[index].name ?? "")));
+                      });
+                }
+
+                if (state is ProductsFailed) {
+                  return Center(child: Text(state.failedText));
+                }
+
+                if (state is ProductsLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                return products.isEmpty
+                    ? const Center(child: Text("No products found."))
+                    : ListView.builder(
                         itemCount: products.length,
                         itemBuilder: (context, index) {
-                          return InkWell(
-                              onTap: () {
-                                context.push(Routes.addAndUpdateProduct, extra: products[index]);
-                              },
-                              child: ListTile(title: Text(products[index].name ?? "")));
+                          return ListTile(title: Text(products[index].name ?? ""));
                         });
+              },
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                context.push(Routes.addAndUpdateProduct).then((val){
+                  if (val == 'addSuccess'){
+                    innerContext.read<ProductsBloc>().add(GetProducts());
                   }
-
-                  if (state is ProductsFailed) {
-                    return Center(child: Text(state.failedText));
-                  }
-
-                  if (state is ProductsLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  return products.isEmpty
-                      ? const Center(child: Text("No products found."))
-                      : ListView.builder(
-                          itemCount: products.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(title: Text(products[index].name ?? ""));
-                          });
-                },
-              ),
-            )
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            context.push(Routes.addAndUpdateProduct);
-          },
-          tooltip: 'Tambah Produk',
-          child: const Icon(Icons.add),
-        ),
+                });
+              },
+              tooltip: 'Tambah Produk',
+              child: const Icon(Icons.add),
+            ),
+          );
+        }
       ),
     );
   }
