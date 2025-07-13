@@ -10,12 +10,19 @@ sealed class ProductsEvent extends Equatable {
 }
 
 class GetProducts extends ProductsEvent {}
+
 class AddProducts extends ProductsEvent {
   final ProductsModel? body;
 
   const AddProducts(this.body);
 }
-class DeleteProduct extends ProductsEvent {}
+
+class DeleteProduct extends ProductsEvent {
+  final dynamic id;
+
+  const DeleteProduct(this.id);
+}
+
 class UpdateProduct extends ProductsEvent {
   final ProductsModel? body;
 

@@ -32,9 +32,13 @@ class ProductsRepositoryImpl implements ProductsRepository {
   }
 
   @override
-  Future<Either<Failure, dynamic>> deleteProducts() {
-    // TODO: implement deleteProducts
-    throw UnimplementedError();
+  Future<Either<Failure, dynamic>> deleteProducts(param) async {
+    try {
+      final result = await datasource.deleteProduct(param);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
   }
 
   @override
