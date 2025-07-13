@@ -13,13 +13,11 @@ class ProductsRepositoryImpl implements ProductsRepository {
   ProductsRepositoryImpl(this.datasource);
 
   @override
-  Future<Either<Failure, ProductsModel>> getProducts() async {
+  Future<Either<Failure, List<ProductsModel>>> getProducts() async {
     try {
       final result = await datasource.getProducts();
       return Right(result);
     } on ServerException catch (e) {
-      return Left(ServerFailure(message: e.message));
-    } on CancelTokenException catch (e) {
       return Left(ServerFailure(message: e.message));
     }
   }

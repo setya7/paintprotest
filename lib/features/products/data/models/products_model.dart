@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-ProductsModel productsModelFromJson(String str) => ProductsModel.fromJson(json.decode(str));
+List<ProductsModel> productsModelFromJson(String str) => List<ProductsModel>.from(json.decode(str).map((x) => ProductsModel.fromJson(x)));
 
-String productsModelToJson(ProductsModel data) => json.encode(data.toJson());
+String productsModelToJson(List<ProductsModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ProductsModel {
   String? id;
