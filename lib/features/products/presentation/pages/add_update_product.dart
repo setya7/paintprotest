@@ -69,13 +69,6 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
     super.dispose();
   }
 
-  bool _isNumeric(String str) {
-    if (str.isEmpty) {
-      return false;
-    }
-    return int.tryParse(str) != null;
-  }
-
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;

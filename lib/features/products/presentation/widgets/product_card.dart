@@ -83,12 +83,12 @@ class ProductCard extends StatelessWidget {
               children: [
                 Chip(
                   label: Text('Weight: ${product.weight ?? 'N/A'} gr'),
-                  backgroundColor: Theme.of(context).colorScheme.surfaceVariant, // Using a surface variant color
+                  backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest, // Using a surface variant color
                   labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
                 Chip(
                   label: Text('Dimensions: ${product.height ?? 'N/A'}x${product.width ?? 'N/A'}x${product.length ?? 'N/A'} cm'),
-                  backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                  backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                   labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ],
