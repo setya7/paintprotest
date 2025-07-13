@@ -9,6 +9,7 @@ import 'package:paintprotest/features/products/presentation/bloc/products_state.
 import '../../../../core/dependency_injection/injection_container.dart';
 import '../../../../routes/app_routes.dart';
 import '../bloc/products_bloc.dart';
+import '../widgets/product_card.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -47,7 +48,7 @@ class _ProductsPageState extends State<ProductsPage> {
                               }
                             });
                           },
-                          child: ListTile(title: Text(products[index].name ?? "")));
+                          child: ProductCard(product: products[index]));
                     });
               }
 
@@ -64,7 +65,7 @@ class _ProductsPageState extends State<ProductsPage> {
                   : ListView.builder(
                       itemCount: products.length,
                       itemBuilder: (context, index) {
-                        return ListTile(title: Text(products[index].name ?? ""));
+                        return ProductCard(product: products[index]);
                       });
             },
           ),
