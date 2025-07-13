@@ -1,5 +1,5 @@
-const String apiUrl = "https://crudcrud.com/api/";
-const String apiKey = "abb7829e5f3d47f0a1b4ee70f1a25bc3";
+const String apiUrl = "https://crudcrud.com/api";
+const String apiKey = "755f7f9569d743eba30f5b82de816791";
 
 String getApiKeyPath() {
   return "?api-key=$apiKey";
