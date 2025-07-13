@@ -6,7 +6,7 @@ import '../../../../core/network/rest_api/error/dio_error_handler.dart';
 import '../../../../core/network/rest_api/error/exceptions.dart';
 
 abstract class ProductsDatasource {
-  Future<ProductsModel> getProducts();
+  Future<List<ProductsModel>> getProducts();
 }
 
 class ProductsDatasourceImpl implements ProductsDatasource {
@@ -17,13 +17,13 @@ class ProductsDatasourceImpl implements ProductsDatasource {
   CancelToken cancelToken = CancelToken();
 
   @override
-  Future<ProductsModel> getProducts() async {
+  Future<List<ProductsModel>> getProducts() async {
     try {
-      final result = await dio.get("$apiUrl/products");
+      final result = await dio.get("$apiUrl/$apiKey/products");
       if (result.data == null) {
         throw ServerException("Unknown Error", result.statusCode);
       }
-      return ProductsModel.fromJson(result.data);
+      return (result.data as List).map((e) => ProductsModel.fromJson(e)).toList();
     } on DioException catch (e) {
       if (e.type == DioExceptionType.cancel) {
         throw CancelTokenException(handleDioError(e), e.response?.statusCode);
