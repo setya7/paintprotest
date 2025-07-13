@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:paintprotest/core/utils/log/app_logger.dart';
 import 'package:paintprotest/features/products/presentation/bloc/products_state.dart';
 
