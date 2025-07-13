@@ -91,4 +91,17 @@ class ProductsModel {
     "image": image,
     "price": price,
   };
+  Map<String, dynamic> toJsonAddUpdateProduct() => {
+    "categoryId": categoryId,
+    "categoryName": categoryName,
+    "sku": sku,
+    "name": name,
+    "description": description,
+    "weight": weight,
+    "width": width,
+    "length": length,
+    "height": height,
+    "image": image,
+    "price": price,
+  };
 }

@@ -1,3 +1,4 @@
+import 'package:paintprotest/features/products/domain/usecases/add_product.dart';
 import 'package:paintprotest/features/products/presentation/bloc/products_bloc.dart';
 
 import '../../core/dependency_injection/injection_container.dart';
@@ -14,5 +15,6 @@ initProductsInjections() {
   sl.registerSingleton<ProductsDatasource>(ProductsDatasourceImpl(DioNetwork.appAPI));
   sl.registerSingleton<ProductsRepository>(ProductsRepositoryImpl(sl()));
   sl.registerSingleton<GetProductsUseCase>(GetProductsUseCase(sl()));
-  sl.registerFactory(() => ProductsBloc(getProducts: sl<GetProductsUseCase>()));
+  sl.registerSingleton<AddProductsUseCase>(AddProductsUseCase(sl()));
+  sl.registerFactory(() => ProductsBloc(getProducts: sl<GetProductsUseCase>(), addProductsUseCase: sl<AddProductsUseCase>()));
 }

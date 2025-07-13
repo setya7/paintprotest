@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:paintprotest/core/utils/log/app_logger.dart';
 import 'package:paintprotest/features/products/data/models/products_model.dart';
 
 import '../../../../core/constants/network_constant.dart';
@@ -7,6 +8,7 @@ import '../../../../core/network/rest_api/error/exceptions.dart';
 
 abstract class ProductsDatasource {
   Future<List<ProductsModel>> getProducts();
+  Future<dynamic> addProduct(ProductsModel param);
 }
 
 class ProductsDatasourceImpl implements ProductsDatasource {
@@ -24,6 +26,28 @@ class ProductsDatasourceImpl implements ProductsDatasource {
         throw ServerException("Unknown Error", result.statusCode);
       }
       return (result.data as List).map((e) => ProductsModel.fromJson(e)).toList();
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.cancel) {
+        throw CancelTokenException(handleDioError(e), e.response?.statusCode);
+      } else {
+        throw ServerException(handleDioError(e), e.response?.statusCode);
+      }
+    } on ServerException {
+      rethrow;
+    } catch (e) {
+      throw ServerException(e.toString(), null);
+    }
+  }
+
+  @override
+  Future addProduct(ProductsModel param)  async {
+    logger.severe(param.toJsonAddUpdateProduct());
+    try {
+      final result = await dio.post("$apiUrl/$apiKey/products", data: param.toJsonAddUpdateProduct());
+      if (result.data == null) {
+        throw ServerException("Unknown Error", result.statusCode);
+      }
+      return result.data;
     } on DioException catch (e) {
       if (e.type == DioExceptionType.cancel) {
         throw CancelTokenException(handleDioError(e), e.response?.statusCode);

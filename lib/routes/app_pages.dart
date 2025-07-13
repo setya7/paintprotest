@@ -23,7 +23,7 @@ final router = GoRouter(
         path: Routes.addAndUpdateProduct,
         builder: (context, state) {
           final product = state.extra as ProductsModel?;
-          return BlocProvider(create: (context) => sl<ProductsBloc>(), child: AddAndUpdateProduct(productsModel: product));
+          return AddAndUpdateProduct(productsModel: product);
         }),
   ],
 );
