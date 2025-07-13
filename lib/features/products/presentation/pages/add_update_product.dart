@@ -314,61 +314,57 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                           ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Expanded(
-                            child: BlocBuilder<ProductsBloc, ProductsState>(
-                              builder: (context, state) {
-                                if (state is ProductsLoadingUpdateProduct) {
-                                  return const CircularProgressIndicator();
-                                }
-                                return ElevatedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      context.read<ProductsBloc>().add(UpdateProduct(ProductsModel(
-                                          id: widget.productsModel?.id,
-                                          categoryName: etCategoryName.text,
-                                          categoryId: 1,
-                                          description: etDescription.text,
-                                          height: int.parse(etHeight.text),
-                                          image: image,
-                                          length: int.parse(etLength.text),
-                                          name: etName.text,
-                                          price: int.parse(etPrice.text),
-                                          sku: etSku.text,
-                                          weight: int.parse(etWeight.text),
-                                          width: int.parse(etWidth.text))));
-                                    }
-                                  },
-                                  child: const Text('Update Product'),
-                                );
-                              },
-                            ),
+                          BlocBuilder<ProductsBloc, ProductsState>(
+                            builder: (context, state) {
+                              if (state is ProductsLoadingUpdateProduct) {
+                                return const CircularProgressIndicator();
+                              }
+                              return ElevatedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    context.read<ProductsBloc>().add(UpdateProduct(ProductsModel(
+                                        id: widget.productsModel?.id,
+                                        categoryName: etCategoryName.text,
+                                        categoryId: 1,
+                                        description: etDescription.text,
+                                        height: int.parse(etHeight.text),
+                                        image: image,
+                                        length: int.parse(etLength.text),
+                                        name: etName.text,
+                                        price: int.parse(etPrice.text),
+                                        sku: etSku.text,
+                                        weight: int.parse(etWeight.text),
+                                        width: int.parse(etWidth.text))));
+                                  }
+                                },
+                                child: const Text('Update Product'),
+                              );
+                            },
                           ),
                           const SizedBox(width: XSpace.paddingL),
-                          Expanded(
-                            child: BlocBuilder<ProductsBloc, ProductsState>(
-                              builder: (context, state) {
-                                if (state is ProductsLoadingDelete) {
-                                  return const CircularProgressIndicator();
-                                }
+                          BlocBuilder<ProductsBloc, ProductsState>(
+                            builder: (context, state) {
+                              if (state is ProductsLoadingDelete) {
+                                return const CircularProgressIndicator();
+                              }
 
-                                return ElevatedButton(
-                                  onPressed: () {
-                                    if (widget.productsModel?.id != null) {
-                                      context.read<ProductsBloc>().add(DeleteProduct(widget.productsModel!.id!));
-                                    } else {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('ID produk tidak ditemukan untuk dihapus.', style: TextStyle(color: colorScheme.onError)), backgroundColor: colorScheme.error),
-                                      );
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: colorScheme.error,
-                                    foregroundColor: colorScheme.onError,
-                                  ),
-                                  child: const Text('Hapus Product'),
-                                );
-                              },
-                            ),
+                              return ElevatedButton(
+                                onPressed: () {
+                                  if (widget.productsModel?.id != null) {
+                                    context.read<ProductsBloc>().add(DeleteProduct(widget.productsModel!.id!));
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('ID produk tidak ditemukan untuk dihapus.', style: TextStyle(color: colorScheme.onError)), backgroundColor: colorScheme.error),
+                                    );
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: colorScheme.error,
+                                  foregroundColor: colorScheme.onError,
+                                ),
+                                child: const Text('Hapus Product'),
+                              );
+                            },
                           ),
                         ],
                       )
