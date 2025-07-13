@@ -30,4 +30,19 @@ final class ProductsFailed extends ProductsState {
 
   const ProductsFailed(this.failedText);
 }
+final class ProductsFailedAdd extends ProductsState {
+  final String failedText;
+
+  const ProductsFailedAdd(this.failedText);
+}
+final class ProductsFailedUpdate extends ProductsState {
+  final String failedText;
+
+  const ProductsFailedUpdate(this.failedText);
+}
+final class ProductsFailedDelete extends ProductsState {
+  final String failedText;
+
+  const ProductsFailedDelete(this.failedText);
+}
 

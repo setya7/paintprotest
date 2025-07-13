@@ -16,4 +16,8 @@ class AddProducts extends ProductsEvent {
   const AddProducts(this.body);
 }
 class DeleteProduct extends ProductsEvent {}
-class UpdateProduct extends ProductsEvent {}
+class UpdateProduct extends ProductsEvent {
+  final ProductsModel? body;
+
+  const UpdateProduct(this.body);
+}

@@ -38,8 +38,12 @@ class ProductsRepositoryImpl implements ProductsRepository {
   }
 
   @override
-  Future<Either<Failure, dynamic>> updateProduct(ProductsModel param) {
-    // TODO: implement updateProducts
-    throw UnimplementedError();
+  Future<Either<Failure, dynamic>> updateProduct(ProductsModel param) async {
+    try {
+      final result = await datasource.updateProduct(param);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(message: e.message));
+    }
   }
 }

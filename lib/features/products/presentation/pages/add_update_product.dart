@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:paintprotest/core/utils/log/app_logger.dart';
 import 'package:paintprotest/features/products/presentation/bloc/products_state.dart';
 
@@ -34,7 +35,6 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
   String image = "";
 
   final _formKey = GlobalKey<FormState>();
-  bool _isFormValid = false;
 
   @override
   void initState() {
@@ -61,11 +61,13 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
       if (widget.productsModel?.categoryName != null) {
         etCategoryName.text = widget.productsModel!.categoryName!;
       }
+      if (widget.productsModel?.sku != null) {
+        etSku.text = widget.productsModel!.sku!;
+      }
       if (widget.productsModel?.image != null) {
         image = widget.productsModel!.image!;
       }
     }
-    _addListenersToControllers();
   }
 
   @override
@@ -82,51 +84,6 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
     super.dispose();
   }
 
-  void _addListenersToControllers() {
-    List<TextEditingController> controllers = [
-      etName,
-      etDescription,
-      etHeight,
-      etWidth,
-      etLength,
-      etWeight,
-      etPrice,
-      etCategoryName,
-      etSku
-    ];
-
-    for (var controller in controllers) {
-      controller.addListener(_validateForm);
-    }
-    _validateForm();
-  }
-
-  void _validateForm() {
-    setState(() {
-      _isFormValid = _formKey.currentState?.validate() ?? false;
-      _isFormValid = _areAllFieldsValid();
-    });
-  }
-
-  bool _areAllFieldsValid() {
-    return etName.text.isNotEmpty &&
-        etDescription.text.isNotEmpty &&
-        etCategoryName.text.isNotEmpty &&
-        _isNumeric(etHeight.text) &&
-        _isNumeric(etWidth.text) &&
-        _isNumeric(etLength.text) &&
-        _isNumeric(etWeight.text) &&
-        _isNumeric(etPrice.text) &&
-        etSku.text.isNotEmpty;
-  }
-
-  bool _isNumeric(String str) {
-    if (str.isEmpty) {
-      return false;
-    }
-    return int.tryParse(str) != null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -138,16 +95,28 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
         body: Builder(builder: (context) {
           return BlocListener<ProductsBloc, ProductsState>(
             listener: (innerContext, state) {
+              print("ini adalah statenya $state");
               if (state is ProductsLoading) {
                 ScaffoldMessenger.of(innerContext).showSnackBar(
                   const SnackBar(content: Text('Memproses...')),
                 );
-              } else if (state is ProductsSuccessAdd) {
+              }
+
+              if (state is ProductsSuccessAdd) {
                 ScaffoldMessenger.of(innerContext).showSnackBar(
                   const SnackBar(content: Text('Produk berhasil ditambahkan!')),
                 );
-                Navigator.pop(innerContext, true);
-              } else if (state is ProductsFailed) {
+                innerContext.pop(true);
+              }
+
+              if (state is ProductsSuccessUpdate) {
+                ScaffoldMessenger.of(innerContext).showSnackBar(
+                  const SnackBar(content: Text('Produk berhasil diubah!')),
+                );
+                innerContext.pop(true);
+              }
+
+              if (state is ProductsFailed) {
                 ScaffoldMessenger.of(innerContext).showSnackBar(
                   SnackBar(content: Text('Error: ${state.failedText}')),
                 );
@@ -158,10 +127,10 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
               child: SingleChildScrollView(
                 child: Form(
                   key: _formKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
                     children: [
                       TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: etName,
                         decoration: const InputDecoration(label: Text("Product name")),
                         validator: (value) {
@@ -172,6 +141,7 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                         },
                       ),
                       TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: etDescription,
                         decoration: const InputDecoration(label: Text("Description")),
                         validator: (value) {
@@ -182,6 +152,7 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                         },
                       ),
                       TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: etCategoryName,
                         decoration: const InputDecoration(label: Text("Category name")),
                         validator: (value) {
@@ -195,6 +166,7 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                         children: [
                           Expanded(
                             child: TextFormField(
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
                               controller: etHeight,
                               decoration: const InputDecoration(label: Text("Height")),
                               validator: (value) {
@@ -214,6 +186,7 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                           ),
                           Expanded(
                             child: TextFormField(
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
                               controller: etWidth,
                               decoration: const InputDecoration(label: Text("Width")),
                               validator: (value) {
@@ -233,6 +206,7 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                           ),
                           Expanded(
                             child: TextFormField(
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
                               controller: etLength,
                               decoration: const InputDecoration(label: Text("Length")),
                               validator: (value) {
@@ -250,6 +224,7 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                         ],
                       ),
                       TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: etWeight,
                         decoration: const InputDecoration(label: Text("Weight")),
                         validator: (value) {
@@ -264,6 +239,7 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                         keyboardType: TextInputType.number,
                       ),
                       TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: etSku,
                         decoration: const InputDecoration(label: Text("SKU")),
                         validator: (value) {
@@ -274,6 +250,7 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                         },
                       ),
                       TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: etPrice,
                         decoration: const InputDecoration(label: Text("Price")),
                         validator: (value) {
@@ -294,10 +271,36 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  child: const Text('Update Product'),
+                                /// update via API
+                                BlocBuilder<ProductsBloc, ProductsState>(
+                                  builder: (context, state) {
+                                    if (state is ProductsLoadingUpdateProduct) {
+                                      return const CircularProgressIndicator();
+                                    }
+                                    return ElevatedButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          context.read<ProductsBloc>().add(UpdateProduct(ProductsModel(
+                                              id: widget.productsModel?.id,
+                                              categoryName: etCategoryName.text,
+                                              categoryId: 1,
+                                              description: etDescription.text,
+                                              height: int.parse(etHeight.text),
+                                              image: image,
+                                              length: int.parse(etLength.text),
+                                              name: etName.text,
+                                              price: int.parse(etPrice.text),
+                                              sku: etSku.text,
+                                              weight: int.parse(etWeight.text),
+                                              width: int.parse(etWidth.text))));
+                                        }
+                                      },
+                                      child: const Text('Update Product'),
+                                    );
+                                  },
                                 ),
+
+                                /// delete via API
                                 ElevatedButton(
                                   onPressed: () {},
                                   child: const Text('Hapus Product'),
@@ -309,25 +312,25 @@ class _AddAndUpdateProductState extends State<AddAndUpdateProduct> {
                                 if (state is ProductsLoadingAddProduct) {
                                   return const CircularProgressIndicator();
                                 }
+
+                                /// add via API
                                 return ElevatedButton(
-                                  onPressed: _isFormValid
-                                      ? () {
-                                          if (_formKey.currentState!.validate()) {
-                                            context.read<ProductsBloc>().add(AddProducts(ProductsModel(
-                                                categoryName: etCategoryName.text,
-                                                categoryId: 1,
-                                                description: etDescription.text,
-                                                height: int.parse(etHeight.text),
-                                                image: image,
-                                                length: int.parse(etLength.text),
-                                                name: etName.text,
-                                                price: int.parse(etPrice.text),
-                                                sku: etSku.text,
-                                                weight: int.parse(etWeight.text),
-                                                width: int.parse(etWidth.text))));
-                                          }
-                                        }
-                                      : (){},
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      context.read<ProductsBloc>().add(AddProducts(ProductsModel(
+                                          categoryName: etCategoryName.text,
+                                          categoryId: 1,
+                                          description: etDescription.text,
+                                          height: int.parse(etHeight.text),
+                                          image: image,
+                                          length: int.parse(etLength.text),
+                                          name: etName.text,
+                                          price: int.parse(etPrice.text),
+                                          sku: etSku.text,
+                                          weight: int.parse(etWeight.text),
+                                          width: int.parse(etWidth.text))));
+                                    }
+                                  },
                                   child: const Text('Tambah Product'),
                                 );
                               },

@@ -9,6 +9,7 @@ import '../../../../core/network/rest_api/error/exceptions.dart';
 abstract class ProductsDatasource {
   Future<List<ProductsModel>> getProducts();
   Future<dynamic> addProduct(ProductsModel param);
+  Future<dynamic> updateProduct(ProductsModel param);
 }
 
 class ProductsDatasourceImpl implements ProductsDatasource {
@@ -44,6 +45,28 @@ class ProductsDatasourceImpl implements ProductsDatasource {
     logger.severe(param.toJsonAddUpdateProduct());
     try {
       final result = await dio.post("$apiUrl/$apiKey/products", data: param.toJsonAddUpdateProduct());
+      if (result.data == null) {
+        throw ServerException("Unknown Error", result.statusCode);
+      }
+      return result.data;
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.cancel) {
+        throw CancelTokenException(handleDioError(e), e.response?.statusCode);
+      } else {
+        throw ServerException(handleDioError(e), e.response?.statusCode);
+      }
+    } on ServerException {
+      rethrow;
+    } catch (e) {
+      throw ServerException(e.toString(), null);
+    }
+  }
+
+  @override
+  Future updateProduct(ProductsModel param) async {
+    logger.severe("param.id ${param.id}");
+    try {
+      final result = await dio.put("$apiUrl/$apiKey/products/${param.id}", data: param.toJsonAddUpdateProduct());
       if (result.data == null) {
         throw ServerException("Unknown Error", result.statusCode);
       }
